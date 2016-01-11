@@ -16,6 +16,7 @@ human vs. cpu. cpu always wins!
   * `H2 NABER` means start from `H2` and place the word `NABER` from top to bottom.
   * `3B HELO` means start from `3B` and place the word `HELO` from left to right.
 - type `-` to pass your turn.
+- use `.` if a letter of the word you type is already on the board.
 
 ## there are bugs
 
