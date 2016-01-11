@@ -13,12 +13,17 @@ engine.
 
 human vs. cpu. cpu always wins!
 
-- `ctrl-s` toggles scores.
 - input box accepts quackle-format
   * `H2 NABER` means start from `H2` and place the word `NABER` from top to bottom.
   * `3B HELO` means start from `3B` and place the word `HELO` from left to right.
-- type `-` to pass your turn.
-- use `.` if a letter of the word you type is already on the board.
+  * words must be typed in all uppercase, except jokers.
+  * jokers must be typed in lowercase. `n` is the joker letter for move `4F CAMEKAn`.
+  * type `-` to pass your turn.
+  * use `.` if a letter of the word you type is already on the board.
+- `ctrl-s` toggles multipliers and scores.
+- `ctrl-t` proposes a highscore move for you.
+- `ctrl-f` shuffles your rack.
+- `ctrl-c` or `esc` quit the game.
 
 ## there are bugs
 
