@@ -90,7 +90,7 @@ mainloop:
 
 		if g.curPlayer().Xtype() == 0 {
 			g.qg.HaveComputerPlay()
-			goto humanMove
+			g.draw()
 		}
 		g.qg.AdvanceToNoncomputerPlayer()
 
@@ -124,7 +124,6 @@ mainloop:
 		case termbox.EventError:
 			panic(ev.Err)
 		}
-	humanMove:
 		g.draw()
 	}
 }
