@@ -87,11 +87,14 @@ mainloop:
 			break mainloop
 		}
 
-		if g.curPlayer().Xtype() == 0 {
+		// go on cold heartless cpu.
+		if g.curPlayer().Xtype() == int(quackle.PlayerComputerPlayerType) {
 			time.Sleep(time.Millisecond * time.Duration(rand.Intn(1000)))
 			g.qg.HaveComputerPlay()
 			g.draw()
+			continue
 		}
+		// it is our turn, humans.
 		g.qg.AdvanceToNoncomputerPlayer()
 
 		switch ev := termbox.PollEvent(); ev.Type {
