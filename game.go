@@ -14,7 +14,7 @@ const (
 	alphabet = "turkish"
 )
 
-// hacky stuff.
+// XXX: hacky stuff.
 var datadir = fmt.Sprintf("%v/src/github.com/igungor/bingo/data", os.Getenv("GOPATH"))
 
 const (
@@ -40,8 +40,8 @@ type game struct {
 func (g *game) draw() {
 	// update board and racks
 	g.board.qb = g.pos().Board()
-	g.rack1.update(g.player(0).Rack().ToString())
-	g.rack2.update(g.player(1).Rack().ToString())
+	g.rack1.qr = g.player(0).Rack()
+	g.rack2.qr = g.player(1).Rack()
 
 	termbox.Clear(fgcolor, bgcolor)
 	defer termbox.Flush()
@@ -251,8 +251,8 @@ func newGame() *game {
 	return &game{
 		qg:         g,
 		board:      b,
-		rack1:      newRack(player1.Name()),
-		rack2:      newRack(player2.Name()),
+		rack1:      newRack(player1.Name(), player1.Rack()),
+		rack2:      newRack(player2.Name(), player2.Rack()),
 		editbox:    newEditbox(),
 		showLegend: true,
 	}
