@@ -11,11 +11,11 @@ engine.
 
 human vs. cpu. cpu always wins!
 
-- `Ctrl-S` toggles scores.
-- Input box accepts quackle-format
+- `ctrl-s` toggles scores.
+- input box accepts quackle-format
   * `H2 NABER` means start from `H2` and place the word `NABER` from top to bottom.
   * `3B HELO` means start from `3B` and place the word `HELO` from left to right.
-- Type `-` to pass your turn.
+- type `-` to pass your turn.
 
 ## there are bugs
 
