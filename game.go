@@ -154,7 +154,7 @@ func (g *game) doHumanMove() {
 
 func (g *game) showHint() {
 	g.editbox.clear()
-	// accept top scoreing advice from the beast
+	// accept top scoring advice from the beast
 	move := g.pos().StaticBestMove()
 	for _, r := range move.ToString() {
 		g.editbox.InsertRune(r)

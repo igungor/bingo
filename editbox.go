@@ -116,7 +116,6 @@ func (eb *editbox) InsertRune(r rune) {
 	if utf8.RuneCount(eb.text) >= 11 {
 		return
 	}
-	r = unicode.TurkishCase.ToUpper(r)
 	var buf [utf8.UTFMax]byte
 	n := utf8.EncodeRune(buf[:], r)
 	eb.text = byteSliceInsert(eb.text, eb.curByteOffset, buf[:n])
