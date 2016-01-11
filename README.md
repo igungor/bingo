@@ -19,8 +19,8 @@ human vs. cpu. cpu always wins!
 
 ## there are bugs
 
-not just bugs, there are many shortcomings as well. it was just a proof-of-concept thingy but i
-play from time to time and lose every damn game.
+not just bugs, there are many shortcomings as well. it was just a proof-of-concept thingy but it's
+a playable game right now. i play and lose every damn game.
 
 ## credits
 
