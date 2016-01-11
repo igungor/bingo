@@ -40,8 +40,8 @@ type game struct {
 func (g *game) draw() {
 	// update board and racks
 	g.board.qb = g.pos().Board()
-	g.rack1.qr = g.player(0).Rack()
-	g.rack2.qr = g.player(1).Rack()
+	g.rack1.player = g.player(0)
+	g.rack2.player = g.player(1)
 
 	termbox.Clear(fgcolor, bgcolor)
 	defer termbox.Flush()
@@ -152,11 +152,7 @@ func (g *game) doHumanMove() {
 func (g *game) showHint() {
 	g.editbox.clear()
 	// accept top scoreing advice from the beast
-	g.pos().Kibitz(1)
-	if g.pos().Moves().Size() == 0 {
-		return
-	}
-	move := g.pos().Moves().SwigGetMoveVector().Get(0)
+	move := g.pos().StaticBestMove()
 	for _, r := range move.ToString() {
 		g.editbox.InsertRune(r)
 	}
@@ -253,8 +249,8 @@ func newGame() *game {
 	return &game{
 		qg:         g,
 		board:      b,
-		rack1:      newRack(player1.Name(), player1.Rack()),
-		rack2:      newRack(player2.Name(), player2.Rack()),
+		rack1:      newRack(player1),
+		rack2:      newRack(player2),
 		editbox:    newEditbox(),
 		showLegend: true,
 	}

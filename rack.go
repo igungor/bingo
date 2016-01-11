@@ -8,35 +8,35 @@ import (
 )
 
 type rack struct {
-	qr    quackle.Rack
-	title string
-	w, h  int
+	player quackle.Player
+	w, h   int
 }
 
-func newRack(title string, r quackle.Rack) rack {
+func newRack(pl quackle.Player) rack {
 	return rack{
-		qr:    r,
-		title: title,
-		w:     7 * 2,
-		h:     1,
+		player: pl,
+		w:      7 * 2,
+		h:      1,
 	}
 }
 
 func (r *rack) draw(x, y int) {
 	drawRect(x, y, r.w, r.h)
-	tbprint("┤"+r.title+"├", x, y-1, fgcolor, bgcolor)
+	tbprint("┤"+r.player.Name()+"├", x, y-1, fgcolor, bgcolor)
+
+	// BUG: player1 score is not adding up. wtf is going on?
+	// player score
+	playerScore := strconv.Itoa(r.player.Score())
+	tbprint(playerScore, x+r.w-len(playerScore), y-1, fgcolor, bgcolor)
 
 	// i dont use tbprint helper function because letters have spacing between them
 	var i int
-	for _, r := range r.qr.ToString() {
+	for _, r := range r.player.Rack().ToString() {
 		termbox.SetCell(x+i*2, y, r, fgcolor|termbox.AttrUnderline|termbox.AttrBold, bgcolor)
 		i++
 	}
-	// score
-	score := strconv.Itoa(r.qr.Score())
-	tbprint(score, x+r.w-len(score), y+1, fgcolor, bgcolor)
 }
 
 func (r *rack) highlight(x, y int) {
-	tbprint(r.title, x+1, y-1, termbox.ColorWhite, termbox.ColorMagenta)
+	tbprint(r.player.Name(), x+1, y-1, termbox.ColorWhite, termbox.ColorMagenta)
 }
