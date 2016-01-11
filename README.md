@@ -1,7 +1,7 @@
 # bingo
 
-bingo is a scrabble game for terminal. it uses the [quackle](https://github.com/quackle/quackle) as
-the engine.
+bingo is a scrabble game for terminal. it uses [quackle](https://github.com/quackle/quackle) as the
+engine.
 
 ## installation
 
@@ -21,6 +21,10 @@ human vs. cpu. cpu always wins!
 
 not just bugs, there are many shortcomings as well. it was just a proof-of-concept thingy but i
 play from time to time and lose every damn game.
+
+## credits
+
+[@gokceneraslan](https://github.com/gokceneraslan)
 
 ## license
 
