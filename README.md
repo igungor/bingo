@@ -3,6 +3,8 @@
 bingo is a scrabble game for terminal. it uses [quackle](https://github.com/quackle/quackle) as the
 engine.
 
+![](http://i.imgur.com/RvFeEyz.png)
+
 ## installation
 
 `go get github.com/igungor/bingo`
