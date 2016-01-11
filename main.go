@@ -2,9 +2,15 @@ package main
 
 import (
 	"log"
+	"math/rand"
+	"time"
 
 	termbox "github.com/nsf/termbox-go"
 )
+
+func init() {
+	rand.Seed(time.Now().UnixNano())
+}
 
 func main() {
 	if err := realMain(); err != nil {

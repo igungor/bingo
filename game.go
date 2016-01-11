@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"math/rand"
 	"os"
 	"time"
 
@@ -33,7 +34,6 @@ type game struct {
 	legend  legend
 	editbox editbox
 
-	isOver     bool
 	showLegend bool
 }
 
@@ -83,12 +83,12 @@ func (g *game) loop() {
 mainloop:
 	for {
 		if g.pos().GameOver() {
-			g.isOver = true
 			g.over()
 			break mainloop
 		}
 
 		if g.curPlayer().Xtype() == 0 {
+			time.Sleep(time.Millisecond * time.Duration(rand.Intn(1000)))
 			g.qg.HaveComputerPlay()
 			g.draw()
 		}
@@ -106,6 +106,8 @@ mainloop:
 				g.showLegend = !g.showLegend
 			case termbox.KeyCtrlT:
 				g.showHint()
+			case termbox.KeyCtrlF:
+				g.curPlayer().Rack().Shuffle()
 			case termbox.KeyBackspace, termbox.KeyBackspace2:
 				g.editbox.DeleteRuneBackward()
 			case termbox.KeySpace:
@@ -234,7 +236,7 @@ func newGame() *game {
 	// set up players and game
 	g := quackle.NewGame()
 	player1 := quackle.NewPlayer("iby", int(quackle.PlayerHumanPlayerType), 0)
-	player2 := newCompPlayer("Computer", 1)
+	player2 := newCompPlayer("cpu", 1)
 	players := quackle.NewPlayerList()
 	players.Add(player1)
 	players.Add(player2)
