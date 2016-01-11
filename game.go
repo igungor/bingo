@@ -104,6 +104,8 @@ mainloop:
 				g.board.showScore = !g.board.showScore
 			case termbox.KeyCtrlL:
 				g.showLegend = !g.showLegend
+			case termbox.KeyCtrlT:
+				g.showHint()
 			case termbox.KeyBackspace, termbox.KeyBackspace2:
 				g.editbox.DeleteRuneBackward()
 			case termbox.KeySpace:
@@ -144,6 +146,20 @@ func (g *game) doHumanMove() {
 	}
 	g.qg.CommitMove(move)
 	g.editbox.clear()
+}
+
+func (g *game) showHint() {
+	g.editbox.clear()
+	// accept top scoreing advice from the beast
+	g.pos().Kibitz(1)
+	if g.pos().Moves().Size() == 0 {
+		return
+	}
+	move := g.pos().Moves().SwigGetMoveVector().Get(0)
+	for _, r := range move.ToString() {
+		g.editbox.InsertRune(r)
+	}
+	termbox.Flush()
 }
 
 // over draws game-over screen.
