@@ -130,7 +130,10 @@ mainloop:
 		case termbox.EventResize:
 			g.draw()
 		case termbox.EventMouse:
-			// TODO(ig): handle mouse clicks
+			// TODO(ig): use mouseDown events for better UX.
+			// https://github.com/nsf/termbox-go/pull/114
+			g.board.highlightPos(ev.MouseX, ev.MouseY)
+			time.Sleep(100 * time.Millisecond)
 		case termbox.EventError:
 			panic(ev.Err)
 		}

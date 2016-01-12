@@ -105,6 +105,27 @@ func (b *board) in(x, y int) bool {
 	return false
 }
 
+func (b *board) highlightPos(x, y int) {
+	if !b.in(x, y) {
+		return
+	}
+
+	ch := '·'
+	fg := fgcolor | termbox.AttrBold
+	bg := bgcolor | termbox.AttrBold
+	for i := b.x; i < x; i += 2 {
+		termbox.SetCell(i, y, ch, fg, bg)
+	}
+	for i := b.y; i < y; i++ {
+		if (x-b.x)%2 == 1 {
+			termbox.SetCell(x-1, i, ch, fg, bg)
+		} else {
+			termbox.SetCell(x, i, ch, fg, bg)
+		}
+	}
+	termbox.Flush()
+}
+
 type legend struct {
 	x, y int
 }
