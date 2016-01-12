@@ -133,8 +133,12 @@ mainloop:
 			// TODO(ig): use mouseDown events for better UX.
 			// https://github.com/nsf/termbox-go/pull/114
 			g.board.highlightPos(ev.MouseX, ev.MouseY)
+			pos := g.board.pos(ev.MouseX, ev.MouseY)
+			if pos == "" {
+				break
+			}
 			g.editbox.clear()
-			for _, r := range g.board.pos(ev.MouseX, ev.MouseY) {
+			for _, r := range pos {
 				g.editbox.insertRune(r)
 			}
 			g.editbox.insertRune(' ')
