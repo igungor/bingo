@@ -17,6 +17,7 @@ type editbox struct {
 	curByteOffset int // cursor offset in bytes
 	x, y          int
 	w, h          int
+	warn, err     bool
 }
 
 func newEditbox() editbox {
@@ -54,6 +55,13 @@ func (eb *editbox) draw() {
 		t = t[size:]
 	}
 	termbox.SetCursor(eb.x+lx+2, eb.y)
+
+	// error/warning indicator
+	if eb.warn {
+		termbox.SetCell(eb.x, eb.y, '❗', fgcolor|termbox.AttrBold, bgcolor)
+	} else if eb.err {
+		termbox.SetCell(eb.x, eb.y, '⊗', fgcolor|termbox.AttrBold, bgcolor)
+	}
 }
 
 func (eb *editbox) getPlaceWord() (string, string, error) {
@@ -70,6 +78,8 @@ func (eb *editbox) getPlaceWord() (string, string, error) {
 func (eb *editbox) clear() {
 	eb.moveCursorTo(0)
 	eb.text = eb.text[:eb.curByteOffset]
+	eb.warn = false
+	eb.err = false
 }
 
 func (eb *editbox) moveCursorTo(boffset int) {

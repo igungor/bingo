@@ -142,6 +142,7 @@ mainloop:
 func (g *game) doHumanMove() {
 	place, word, err := g.editbox.getPlaceWord()
 	if err != nil {
+		g.editbox.err = true
 		return
 	}
 	var move quackle.Move
@@ -151,6 +152,7 @@ func (g *game) doHumanMove() {
 		move = quackle.MoveCreatePlaceMove(place, flexAbc.Encode(word))
 	}
 	if g.pos().ValidateMove(move) != 0 {
+		g.editbox.warn = true
 		return
 	}
 	g.qg.CommitMove(move)
@@ -164,7 +166,6 @@ func (g *game) showHint() {
 	for _, r := range move.ToString() {
 		g.editbox.insertRune(r)
 	}
-	termbox.Flush()
 }
 
 // over draws game-over screen.
