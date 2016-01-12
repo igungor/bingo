@@ -59,8 +59,10 @@ func (eb *editbox) draw() {
 	// error/warning indicator
 	if eb.warn {
 		termbox.SetCell(eb.x, eb.y, '❗', fgcolor|termbox.AttrBold, bgcolor)
+		eb.warn = false
 	} else if eb.err {
 		termbox.SetCell(eb.x, eb.y, '⊗', fgcolor|termbox.AttrBold, bgcolor)
+		eb.err = false
 	}
 }
 
@@ -78,8 +80,6 @@ func (eb *editbox) getPlaceWord() (string, string, error) {
 func (eb *editbox) clear() {
 	eb.moveCursorTo(0)
 	eb.text = eb.text[:eb.curByteOffset]
-	eb.warn = false
-	eb.err = false
 }
 
 func (eb *editbox) moveCursorTo(boffset int) {

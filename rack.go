@@ -30,7 +30,7 @@ func (r *rack) draw() {
 	playerScore := strconv.Itoa(r.player.Score())
 	tbprint(playerScore, r.x+r.w-len(playerScore), r.y-1, fgcolor, bgcolor)
 
-	// i dont use tbprint helper function because letters have spacing between them
+	// tbprint helper function is not used because letters have spacing between them
 	var i int
 	for _, ch := range r.player.Rack().ToString() {
 		termbox.SetCell(r.x+i*2, r.y, ch, fgcolor|termbox.AttrUnderline|termbox.AttrBold, bgcolor)
