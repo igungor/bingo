@@ -44,12 +44,10 @@ func (eb *editbox) draw(x, y int) {
 		if lx == 0 && unicode.IsNumber(r) {
 			termbox.SetCell(x, y, '→', fgcolor|termbox.AttrBold, bgcolor)
 		}
-
 		// pass
 		if lx == 0 && r == '-' {
 			termbox.SetCell(x, y, '⚐', fgcolor|termbox.AttrBold, bgcolor)
 		}
-
 		termbox.SetCell(x+lx+2, y, r, fgcolor, bgcolor)
 		lx += 1
 		t = t[size:]

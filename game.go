@@ -35,6 +35,7 @@ type game struct {
 	editbox editbox
 
 	showLegend bool
+	showHelp   bool
 }
 
 func (g *game) draw() {
@@ -50,15 +51,8 @@ func (g *game) draw() {
 
 	// board
 	boardx := (sw - g.board.w*2 + 2 + 1) / 2
-	boardy := (sh - g.board.h + 1 + 1) / 2
+	boardy := (sh - g.board.h - g.rack1.h - g.editbox.h - 2) / 2
 	g.board.draw(boardx, boardy)
-
-	// legend
-	if g.showLegend {
-		legendx := (sw+g.board.w)/2 + 1
-		legendy := (sh-g.board.h)/2 + 1 + 1 + g.board.h
-		g.legend.draw(legendx, legendy)
-	}
 
 	// racks
 	rack1x := boardx
@@ -74,9 +68,20 @@ func (g *game) draw() {
 	}
 
 	// editbox
-	boxx := (sw-g.editbox.w)/2 + 1
-	boxy := (sh+g.board.h)/2 + g.rack1.h + 5
+	boxx := boardx + g.editbox.w/2 + 1
+	boxy := rack1y - g.rack1.h + 4
 	g.editbox.draw(boxx, boxy)
+
+	// legend
+	if g.showLegend {
+		legendx := (sw+g.board.w)/2 + 1
+		legendy := (sh-g.board.h)/2 + 1 + g.board.h
+		g.legend.draw(legendx, legendy)
+	}
+
+	if g.showHelp {
+	}
+
 }
 
 func (g *game) loop() {
@@ -94,7 +99,7 @@ mainloop:
 			g.draw()
 			continue
 		}
-		// it is our turn, humans.
+		// it is our turn, human.
 		g.qg.AdvanceToNoncomputerPlayer()
 
 		switch ev := termbox.PollEvent(); ev.Type {
@@ -250,11 +255,10 @@ func newGame() *game {
 	}
 
 	return &game{
-		qg:         g,
-		board:      b,
-		rack1:      newRack(player1),
-		rack2:      newRack(player2),
-		editbox:    newEditbox(),
-		showLegend: true,
+		qg:      g,
+		board:   b,
+		rack1:   newRack(player1),
+		rack2:   newRack(player2),
+		editbox: newEditbox(),
 	}
 }
