@@ -50,33 +50,33 @@ func (g *game) draw() {
 	sw, sh := termbox.Size()
 
 	// board
-	boardx := (sw - g.board.w*2 + 2 + 1) / 2
-	boardy := (sh - g.board.h - g.rack1.h - g.editbox.h - 2) / 2
-	g.board.draw(boardx, boardy)
+	g.board.x = (sw - g.board.w*2 + 2 + 1) / 2
+	g.board.y = (sh - g.board.h - g.rack1.h - g.editbox.h - 2) / 2
+	g.board.draw()
 
 	// racks
-	rack1x := boardx
-	rack1y := boardy + g.board.h + 2
-	g.rack1.draw(rack1x, rack1y)
-	rack2x := boardx + g.rack1.w + 2
-	rack2y := boardy + g.board.h + 2
-	g.rack2.draw(rack2x, rack2y)
+	g.rack1.x = g.board.x
+	g.rack1.y = g.board.y + g.board.h + 2
+	g.rack1.draw()
+	g.rack2.x = g.board.x + g.rack1.w + 2
+	g.rack2.y = g.board.y + g.board.h + 2
+	g.rack2.draw()
 	if g.curPlayer().Id() == 0 {
-		g.rack1.highlight(rack1x, rack1y)
+		g.rack1.highlight()
 	} else {
-		g.rack2.highlight(rack2x, rack2y)
+		g.rack2.highlight()
 	}
 
 	// editbox
-	boxx := boardx + g.editbox.w/2 + 1
-	boxy := rack1y - g.rack1.h + 4
-	g.editbox.draw(boxx, boxy)
+	g.editbox.x = g.board.x + g.editbox.w/2 + 1
+	g.editbox.y = g.rack1.y - g.rack1.h + 4
+	g.editbox.draw()
 
 	// legend
 	if g.showLegend {
-		legendx := (sw+g.board.w)/2 + 1
-		legendy := (sh-g.board.h)/2 + 1 + g.board.h
-		g.legend.draw(legendx, legendy)
+		g.legend.x = (sw+g.board.w)/2 + 1
+		g.legend.y = (sh-g.board.h)/2 + 1 + g.board.h
+		g.legend.draw()
 	}
 
 	if g.showHelp {
@@ -117,14 +117,14 @@ mainloop:
 			case termbox.KeyCtrlF:
 				g.curPlayer().Rack().Shuffle()
 			case termbox.KeyBackspace, termbox.KeyBackspace2:
-				g.editbox.DeleteRuneBackward()
+				g.editbox.deleteRuneBackward()
 			case termbox.KeySpace:
-				g.editbox.InsertRune(' ')
+				g.editbox.insertRune(' ')
 			case termbox.KeyEsc, termbox.KeyCtrlC:
 				break mainloop
 			default:
 				if ev.Ch != 0 {
-					g.editbox.InsertRune(ev.Ch)
+					g.editbox.insertRune(ev.Ch)
 				}
 			}
 		case termbox.EventResize:
@@ -162,7 +162,7 @@ func (g *game) showHint() {
 	// accept top scoring advice from the beast
 	move := g.pos().StaticBestMove()
 	for _, r := range move.ToString() {
-		g.editbox.InsertRune(r)
+		g.editbox.insertRune(r)
 	}
 	termbox.Flush()
 }
@@ -192,7 +192,22 @@ func (g *game) player(id int) quackle.Player {
 }
 
 // newGame initializes a new game and constructs game object.
-func newGame() *game {
+func newGame(opts *gameOpts) *game {
+	if opts == nil {
+		opts = &gameOpts{
+			p1type:   human,
+			p2type:   computer,
+			p1name:   "iby",
+			p2name:   "hal",
+			alphabet: alphabet,
+		}
+	} else {
+		switch {
+		case opts.alphabet == "":
+			opts.alphabet = alphabet
+		}
+	}
+
 	dm = quackle.NewDataManager()
 	dm.SetComputerPlayers(quackle.ComputerPlayerCollectionFullCollection().SwigGetPlayerList())
 	dm.SetBackupLexicon(lexicon)
@@ -239,7 +254,7 @@ func newGame() *game {
 
 	// set up players and game
 	g := quackle.NewGame()
-	player1 := quackle.NewPlayer("iby", int(quackle.PlayerHumanPlayerType), 0)
+	player1 := quackle.NewPlayer(opts.p1name, 1, 0)
 	player2 := newCompPlayer("cpu", 1)
 	players := quackle.NewPlayerList()
 	players.Add(player1)
@@ -261,4 +276,17 @@ func newGame() *game {
 		rack2:   newRack(player2),
 		editbox: newEditbox(),
 	}
+}
+
+type playerType int
+
+const (
+	human playerType = iota
+	computer
+)
+
+type gameOpts struct {
+	p1type, p2type playerType
+	p1name, p2name string
+	alphabet       string
 }

@@ -14,27 +14,28 @@ const boardsize = 15
 type board struct {
 	qb        quackle.Board
 	w, h      int
+	x, y      int
 	showScore bool
 }
 
-func (b *board) draw(x, y int) {
+func (b *board) draw() {
 	// columns on the top
 	for dx := 0; dx < b.w; dx++ {
-		termbox.SetCell(x+dx*2, y-2, rune('A'+dx), fgcolor, bgcolor)
-		termbox.SetCell(x+dx*2+1, y-2, ' ', fgcolor, bgcolor)
+		termbox.SetCell(b.x+dx*2, b.y-2, rune('A'+dx), fgcolor, bgcolor)
+		termbox.SetCell(b.x+dx*2+1, b.y-2, ' ', fgcolor, bgcolor)
 	}
 
 	// rows on the left
 	for dy := 0; dy < b.h; dy++ {
 		if dy+1 < 10 {
-			tbprint(strconv.Itoa(dy+1), x-2, y+dy, fgcolor, bgcolor)
+			tbprint(strconv.Itoa(dy+1), b.x-2, b.y+dy, fgcolor, bgcolor)
 		} else {
-			tbprint(strconv.Itoa(dy+1), x-3, y+dy, fgcolor, bgcolor)
+			tbprint(strconv.Itoa(dy+1), b.x-3, b.y+dy, fgcolor, bgcolor)
 		}
 	}
 
 	// borders
-	drawRect(x, y, b.w*2, b.h)
+	drawRect(b.x, b.y, b.w*2, b.h)
 
 	// multipliers and letters
 	for row := 0; row < b.h; row++ {
@@ -51,9 +52,9 @@ func (b *board) draw(x, y int) {
 				if unicode.IsUpper(r) {
 					score = flexAbc.Score(bl)
 				}
-				termbox.SetCell(x+col*2, y+row, r, fgcolor, bgcolor)
+				termbox.SetCell(b.x+col*2, b.y+row, r, fgcolor, bgcolor)
 				if b.showScore {
-					termbox.SetCell(x+col*2+1, y+row, getScoreRune(score), fgcolor, bgcolor)
+					termbox.SetCell(b.x+col*2+1, b.y+row, getScoreRune(score), fgcolor, bgcolor)
 				}
 				continue
 			}
@@ -87,22 +88,32 @@ func (b *board) draw(x, y int) {
 				altch = " "
 			}
 			if b.showScore {
-				tbprint(altch, x+col*2, y+row, color, bgcolor)
+				tbprint(altch, b.x+col*2, b.y+row, color, bgcolor)
 			} else {
-				tbprint(ch, x+col*2, y+row, color, bgcolor)
+				tbprint(ch, b.x+col*2, b.y+row, color, bgcolor)
 			}
 		}
 	}
 }
 
-type legend struct {
+// in reports whether the given (x,y) coordinates overlaps with the board.
+func (b *board) in(x, y int) bool {
+	if x >= b.x && x < b.x+b.w*2 &&
+		y >= b.y && y < b.y+b.h {
+		return true
+	}
+	return false
 }
 
-func (l *legend) draw(x, y int) {
-	tbprint("H²", x+0, y, termbox.ColorWhite, termbox.ColorBlue)
-	tbprint("H³", x+2, y, termbox.ColorWhite, termbox.ColorMagenta)
-	tbprint("K²", x+4, y, termbox.ColorWhite, termbox.ColorGreen)
-	tbprint("K³", x+6, y, termbox.ColorWhite, termbox.ColorBlack)
+type legend struct {
+	x, y int
+}
+
+func (l *legend) draw() {
+	tbprint("H²", l.x+0, l.y, termbox.ColorWhite, termbox.ColorBlue)
+	tbprint("H³", l.x+2, l.y, termbox.ColorWhite, termbox.ColorMagenta)
+	tbprint("K²", l.x+4, l.y, termbox.ColorWhite, termbox.ColorGreen)
+	tbprint("K³", l.x+6, l.y, termbox.ColorWhite, termbox.ColorBlack)
 }
 
 var score2rune = []rune{'₀', '₁', '₂', '₃', '₄', '₅', '₆', '₇', '₈', '₉', '⏨'}

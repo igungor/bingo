@@ -27,9 +27,9 @@ func realMain() error {
 		return err
 	}
 	defer termbox.Close()
-	termbox.SetInputMode(termbox.InputEsc)
+	termbox.SetInputMode(termbox.InputEsc | termbox.InputMouse)
 
-	game := newGame()
+	game := newGame(nil)
 	game.draw()
 	game.loop()
 	return nil

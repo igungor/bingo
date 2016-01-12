@@ -15,6 +15,7 @@ const editboxWidth = 14
 type editbox struct {
 	text          []byte
 	curByteOffset int // cursor offset in bytes
+	x, y          int
 	w, h          int
 }
 
@@ -25,9 +26,9 @@ func newEditbox() editbox {
 	}
 }
 
-// Draws the editbox in the given location, 'h' is not used at the moment
-func (eb *editbox) draw(x, y int) {
-	drawRect(x, y, eb.w, eb.h)
+// Draws the editbox at (x,y) position.
+func (eb *editbox) draw() {
+	drawRect(eb.x, eb.y, eb.w, eb.h)
 
 	t := eb.text
 	lx := 0
@@ -38,21 +39,21 @@ func (eb *editbox) draw(x, y int) {
 		r, size := utf8.DecodeRune(t)
 		// topdown words
 		if lx == 0 && unicode.IsLetter(r) {
-			termbox.SetCell(x, y, '↓', fgcolor|termbox.AttrBold, bgcolor)
+			termbox.SetCell(eb.x, eb.y, '↓', fgcolor|termbox.AttrBold, bgcolor)
 		}
 		// leftright words
 		if lx == 0 && unicode.IsNumber(r) {
-			termbox.SetCell(x, y, '→', fgcolor|termbox.AttrBold, bgcolor)
+			termbox.SetCell(eb.x, eb.y, '→', fgcolor|termbox.AttrBold, bgcolor)
 		}
 		// pass
 		if lx == 0 && r == '-' {
-			termbox.SetCell(x, y, '⚐', fgcolor|termbox.AttrBold, bgcolor)
+			termbox.SetCell(eb.x, eb.y, '⚐', fgcolor|termbox.AttrBold, bgcolor)
 		}
-		termbox.SetCell(x+lx+2, y, r, fgcolor, bgcolor)
+		termbox.SetCell(eb.x+lx+2, eb.y, r, fgcolor, bgcolor)
 		lx += 1
 		t = t[size:]
 	}
-	termbox.SetCursor(x+lx+2, y)
+	termbox.SetCursor(eb.x+lx+2, eb.y)
 }
 
 func (eb *editbox) getPlaceWord() (string, string, error) {
@@ -67,49 +68,49 @@ func (eb *editbox) getPlaceWord() (string, string, error) {
 }
 
 func (eb *editbox) clear() {
-	eb.MoveCursorTo(0)
+	eb.moveCursorTo(0)
 	eb.text = eb.text[:eb.curByteOffset]
 }
 
-func (eb *editbox) MoveCursorTo(boffset int) {
+func (eb *editbox) moveCursorTo(boffset int) {
 	eb.curByteOffset = boffset
 }
 
-func (eb *editbox) RuneUnderCursor() (rune, int) {
+func (eb *editbox) runeUnderCursor() (rune, int) {
 	return utf8.DecodeRune(eb.text[eb.curByteOffset:])
 }
 
-func (eb *editbox) RuneBeforeCursor() (rune, int) {
+func (eb *editbox) runeBeforeCursor() (rune, int) {
 	return utf8.DecodeLastRune(eb.text[:eb.curByteOffset])
 }
 
-func (eb *editbox) MoveCursorOneRuneBackward() {
+func (eb *editbox) moveCursorOneRuneBackward() {
 	if eb.curByteOffset == 0 {
 		return
 	}
-	_, size := eb.RuneBeforeCursor()
-	eb.MoveCursorTo(eb.curByteOffset - size)
+	_, size := eb.runeBeforeCursor()
+	eb.moveCursorTo(eb.curByteOffset - size)
 }
 
-func (eb *editbox) MoveCursorOneRuneForward() {
+func (eb *editbox) moveCursorOneRuneForward() {
 	if eb.curByteOffset == len(eb.text) {
 		return
 	}
-	_, size := eb.RuneUnderCursor()
-	eb.MoveCursorTo(eb.curByteOffset + size)
+	_, size := eb.runeUnderCursor()
+	eb.moveCursorTo(eb.curByteOffset + size)
 }
 
-func (eb *editbox) DeleteRuneBackward() {
+func (eb *editbox) deleteRuneBackward() {
 	if eb.curByteOffset == 0 {
 		return
 	}
 
-	eb.MoveCursorOneRuneBackward()
-	_, size := eb.RuneUnderCursor()
+	eb.moveCursorOneRuneBackward()
+	_, size := eb.runeUnderCursor()
 	eb.text = byteSliceRemove(eb.text, eb.curByteOffset, eb.curByteOffset+size)
 }
 
-func (eb *editbox) InsertRune(r rune) {
+func (eb *editbox) insertRune(r rune) {
 	// ___ _______ -> total of 11 runes
 	if utf8.RuneCount(eb.text) >= 11 {
 		return
@@ -117,7 +118,7 @@ func (eb *editbox) InsertRune(r rune) {
 	var buf [utf8.UTFMax]byte
 	n := utf8.EncodeRune(buf[:], r)
 	eb.text = byteSliceInsert(eb.text, eb.curByteOffset, buf[:n])
-	eb.MoveCursorOneRuneForward()
+	eb.moveCursorOneRuneForward()
 }
 
 func byteSliceGrow(s []byte, desired_cap int) []byte {
