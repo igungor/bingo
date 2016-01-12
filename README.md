@@ -7,6 +7,8 @@ engine.
 
 ## installation
 
+requires recent version of `Go`,  `Qt4 QtCore` headers and `SWIG 3.0.6` or higher.
+
 `go get github.com/igungor/bingo`
 
 ## how to play
