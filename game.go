@@ -133,6 +133,12 @@ mainloop:
 			// TODO(ig): use mouseDown events for better UX.
 			// https://github.com/nsf/termbox-go/pull/114
 			g.board.highlightPos(ev.MouseX, ev.MouseY)
+			g.editbox.clear()
+			for _, r := range g.board.pos(ev.MouseX, ev.MouseY) {
+				g.editbox.insertRune(r)
+			}
+			g.editbox.insertRune(' ')
+			termbox.Flush()
 			time.Sleep(100 * time.Millisecond)
 		case termbox.EventError:
 			panic(ev.Err)

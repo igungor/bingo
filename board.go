@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"strconv"
 	"unicode"
 	"unicode/utf8"
@@ -113,6 +114,8 @@ func (b *board) highlightPos(x, y int) {
 	ch := '·'
 	fg := fgcolor | termbox.AttrBold
 	bg := bgcolor | termbox.AttrBold
+
+	// draw position indicators
 	for i := b.x; i < x; i += 2 {
 		termbox.SetCell(i, y, ch, fg, bg)
 	}
@@ -124,6 +127,16 @@ func (b *board) highlightPos(x, y int) {
 		}
 	}
 	termbox.Flush()
+}
+
+func (b *board) pos(x, y int) string {
+	if !b.in(x, y) {
+		return ""
+	}
+
+	xpos := (x - b.x) / 2
+	ypos := y - b.y
+	return fmt.Sprintf("%v%v", ypos+1, string(rune('A'+xpos)))
 }
 
 type legend struct {
