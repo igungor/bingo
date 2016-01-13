@@ -74,8 +74,8 @@ func (g *game) draw() {
 
 	// legend
 	if g.showLegend {
-		g.legend.x = (sw+g.board.w)/2 + 1
-		g.legend.y = (sh-g.board.h)/2 + 1 + g.board.h
+		g.legend.x = g.board.x + g.board.w*2 - 8
+		g.legend.y = g.board.y + g.board.h
 		g.legend.draw()
 	}
 
