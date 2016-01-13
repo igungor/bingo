@@ -1,7 +1,7 @@
 # bingo
 
-bingo is a scrabble game for terminal. it uses [quackle](https://github.com/quackle/quackle) as the
-engine.
+bingo is a crossword game for terminal. it uses [quackle](https://github.com/quackle/quackle) as
+the engine.
 
 ![](http://i.imgur.com/RvFeEyz.png)
 
