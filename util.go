@@ -1,6 +1,6 @@
 package main
 
-import termbox "github.com/nsf/termbox-go"
+import termbox "github.com/igungor/termbox-go"
 
 // tbprint prints the msg at (x,y) position of the grid.
 func tbprint(msg string, x, y int, fg, bg termbox.Attribute) {

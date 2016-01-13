@@ -7,7 +7,7 @@ import (
 	"unicode/utf8"
 
 	"github.com/igungor/quackle"
-	termbox "github.com/nsf/termbox-go"
+	termbox "github.com/igungor/termbox-go"
 )
 
 const boardsize = 15

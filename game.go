@@ -7,7 +7,7 @@ import (
 	"time"
 
 	"github.com/igungor/quackle"
-	termbox "github.com/nsf/termbox-go"
+	termbox "github.com/igungor/termbox-go"
 )
 
 const (
@@ -132,18 +132,25 @@ mainloop:
 		case termbox.EventMouse:
 			// TODO(ig): use mouseDown events for better UX.
 			// https://github.com/nsf/termbox-go/pull/114
-			g.board.highlightPos(ev.MouseX, ev.MouseY)
-			pos := g.board.pos(ev.MouseX, ev.MouseY)
-			if pos == "" {
-				break
+			if ev.Key == termbox.MouseLeft || ev.Key == termbox.MouseDown {
+				g.draw()
+				g.board.highlightPos(ev.MouseX, ev.MouseY)
+				pos := g.board.pos(ev.MouseX, ev.MouseY)
+				if pos == "" {
+					break
+				}
+				g.editbox.clear()
+				for _, r := range pos {
+					g.editbox.insertRune(r)
+				}
+				g.editbox.insertRune(' ')
+				termbox.Flush()
+				continue
 			}
-			g.editbox.clear()
-			for _, r := range pos {
-				g.editbox.insertRune(r)
+			if ev.Key == termbox.MouseRelease {
+				g.draw()
+				continue
 			}
-			g.editbox.insertRune(' ')
-			termbox.Flush()
-			time.Sleep(150 * time.Millisecond)
 		case termbox.EventError:
 			panic(ev.Err)
 		}

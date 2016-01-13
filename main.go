@@ -8,7 +8,7 @@ import (
 	"math/rand"
 	"time"
 
-	termbox "github.com/nsf/termbox-go"
+	termbox "github.com/igungor/termbox-go"
 )
 
 func init() {

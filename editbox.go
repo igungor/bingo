@@ -6,7 +6,7 @@ import (
 	"unicode"
 	"unicode/utf8"
 
-	termbox "github.com/nsf/termbox-go"
+	termbox "github.com/igungor/termbox-go"
 )
 
 const preferredHorizontalThreshold = 3

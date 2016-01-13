@@ -4,7 +4,7 @@ import (
 	"strconv"
 
 	"github.com/igungor/quackle"
-	termbox "github.com/nsf/termbox-go"
+	termbox "github.com/igungor/termbox-go"
 )
 
 type rack struct {
