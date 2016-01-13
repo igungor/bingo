@@ -13,10 +13,11 @@ import (
 const boardsize = 15
 
 type board struct {
-	qb        quackle.Board
-	w, h      int
-	x, y      int
-	showScore bool
+	qb         quackle.Board
+	w, h       int
+	x, y       int
+	showScore  bool
+	curPosVert bool
 }
 
 func (b *board) draw() {
@@ -111,19 +112,34 @@ func (b *board) highlightPos(x, y int) {
 		return
 	}
 
-	ch := '·'
+	b.curPosVert = !b.curPosVert
+
 	fg := fgcolor | termbox.AttrBold
 	bg := bgcolor | termbox.AttrBold
 
+	defch := '·'
+	var xch, ych rune
+	if b.curPosVert {
+		xch = defch
+		ych = '⇣'
+	} else {
+		xch = '⇢'
+		ych = defch
+	}
+
 	// draw position indicators
 	for i := b.x; i <= x; i += 2 {
-		termbox.SetCell(i, y, ch, fg, bg)
+		if (x-b.x)%2 == 1 {
+			termbox.SetCell(i-2, y, xch, fg, bg)
+		} else {
+			termbox.SetCell(i, y, xch, fg, bg)
+		}
 	}
 	for i := b.y; i <= y; i++ {
 		if (x-b.x)%2 == 1 {
-			termbox.SetCell(x-1, i, ch, fg, bg)
+			termbox.SetCell(x-1, i, ych, fg, bg)
 		} else {
-			termbox.SetCell(x, i, ch, fg, bg)
+			termbox.SetCell(x, i, ych, fg, bg)
 		}
 	}
 	termbox.Flush()
@@ -136,7 +152,13 @@ func (b *board) pos(x, y int) string {
 
 	xpos := (x - b.x) / 2
 	ypos := y - b.y
-	return fmt.Sprintf("%v%v", ypos+1, string(rune('A'+xpos)))
+	var place string
+	if b.curPosVert {
+		place = fmt.Sprintf("%v%v", string(rune('A'+xpos)), ypos+1)
+	} else {
+		place = fmt.Sprintf("%v%v", ypos+1, string(rune('A'+xpos)))
+	}
+	return place
 }
 
 type legend struct {

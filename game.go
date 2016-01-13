@@ -143,7 +143,7 @@ mainloop:
 			}
 			g.editbox.insertRune(' ')
 			termbox.Flush()
-			time.Sleep(100 * time.Millisecond)
+			time.Sleep(150 * time.Millisecond)
 		case termbox.EventError:
 			panic(ev.Err)
 		}
@@ -278,9 +278,10 @@ func newGame(opts *gameOpts) *game {
 	g.AddPosition()
 
 	b := board{
-		qb: g.CurrentPosition().(quackle.GamePosition).Board(),
-		w:  boardsize,
-		h:  boardsize,
+		qb:         g.CurrentPosition().(quackle.GamePosition).Board(),
+		w:          boardsize,
+		h:          boardsize,
+		curPosVert: true,
 	}
 
 	return &game{
