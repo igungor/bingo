@@ -25,6 +25,7 @@ human vs. cpu. cpu always wins!
 - `ctrl-s` toggles multipliers and scores.
 - `ctrl-t` proposes a highscore move for you.
 - `ctrl-f` shuffles your rack.
+- `ctrl-l` toggles legend.
 - `ctrl-c` or `esc` quit the game.
 
 ## there are bugs
