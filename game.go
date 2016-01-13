@@ -130,8 +130,6 @@ mainloop:
 		case termbox.EventResize:
 			g.draw()
 		case termbox.EventMouse:
-			// TODO(ig): use mouseDown events for better UX.
-			// https://github.com/nsf/termbox-go/pull/114
 			if ev.Key == termbox.MouseLeft || ev.Key == termbox.MouseDown {
 				g.draw()
 				g.board.highlightPos(ev.MouseX, ev.MouseY)
