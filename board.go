@@ -128,12 +128,8 @@ func (b *board) highlightPos(x, y int) {
 	}
 
 	// draw position indicators
-	for i := b.x; i <= x; i += 2 {
-		if (x-b.x)%2 == 1 {
-			termbox.SetCell(i-2, y, xch, fg, bg)
-		} else {
-			termbox.SetCell(i, y, xch, fg, bg)
-		}
+	for i := b.x; i < x; i += 2 {
+		termbox.SetCell(i, y, xch, fg, bg)
 	}
 	for i := b.y; i <= y; i++ {
 		if (x-b.x)%2 == 1 {
