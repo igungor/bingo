@@ -169,9 +169,18 @@ func (g *game) doHumanMove() {
 	} else {
 		move = quackle.MoveCreatePlaceMove(place, flexAbc.Encode(word))
 	}
-	if g.pos().ValidateMove(move) != 0 {
-		g.editbox.warn = true
-		return
+
+	// score the move
+	pos := g.pos()
+	if pos.Moves().Contains(move) {
+		pos.ScoreMove(move)
+		g.qg.SetCandidate(move)
+	} else {
+		if pos.ValidateMove(move) != 0 {
+			g.editbox.warn = true
+			return
+		}
+		pos.AddAndSetMoveMade(move)
 	}
 	g.qg.CommitMove(move)
 	g.editbox.clear()
