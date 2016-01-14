@@ -25,8 +25,6 @@ func (r *rack) draw() {
 	drawRect(r.x, r.y, r.w, r.h)
 	tbprint("┤"+r.player.Name()+"├", r.x, r.y-1, fgcolor, bgcolor)
 
-	// BUG: player1 score is not adding up. wtf is going on?
-	// player score
 	playerScore := strconv.Itoa(r.player.Score())
 	tbprint(playerScore, r.x+r.w-len(playerScore), r.y-1, fgcolor, bgcolor)
 
