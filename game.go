@@ -109,13 +109,13 @@ mainloop:
 				// new human move
 				g.doHumanMove()
 			case termbox.KeyCtrlS:
-				g.board.showScore = !g.board.showScore
+				g.curPlayer().Rack().Shuffle()
 			case termbox.KeyCtrlL:
 				g.showLegend = !g.showLegend
 			case termbox.KeyCtrlT:
-				g.showHint()
+				g.board.showScore = !g.board.showScore
 			case termbox.KeyCtrlF:
-				g.curPlayer().Rack().Shuffle()
+				g.showHint()
 			case termbox.KeyBackspace, termbox.KeyBackspace2:
 				g.editbox.deleteRuneBackward()
 			case termbox.KeySpace:

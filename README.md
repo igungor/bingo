@@ -22,9 +22,9 @@ human vs. cpu. cpu always wins!
   * jokers must be typed in lowercase. `n` is the joker letter for move `4F CAMEKAn`.
   * type `-` to pass your turn.
   * use `.` if a letter of the word you type is already on the board.
-- `ctrl-s` toggles multipliers and scores.
-- `ctrl-t` proposes a highscore move for you.
-- `ctrl-f` shuffles your rack.
+- `ctrl-t` toggles multipliers and scores.
+- `ctrl-f` fill the input box with a highscore move for you.
+- `ctrl-s` shuffles your rack.
 - `ctrl-l` toggles legend.
 - `ctrl-c` or `esc` quit the game.
 
