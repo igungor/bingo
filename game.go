@@ -34,6 +34,7 @@ type game struct {
 	legend  legend
 	editbox editbox
 
+	maxKibitz  int
 	showLegend bool
 	showHelp   bool
 }
@@ -189,6 +190,13 @@ func (g *game) doHumanMove() {
 func (g *game) showHint() {
 	g.editbox.clear()
 	// accept top scoring advice from the beast
+	g.maxKibitz--
+	if g.maxKibitz <= 0 {
+		for _, r := range "not anymore!" {
+			g.editbox.insertRune(r)
+		}
+		return
+	}
 	move := g.pos().StaticBestMove()
 	for _, r := range move.ToString() {
 		g.editbox.insertRune(r)
@@ -299,11 +307,12 @@ func newGame(opts *gameOpts) *game {
 	}
 
 	return &game{
-		qg:      g,
-		board:   b,
-		rack1:   newRack(player1),
-		rack2:   newRack(player2),
-		editbox: newEditbox(),
+		qg:        g,
+		board:     b,
+		rack1:     newRack(player1),
+		rack2:     newRack(player2),
+		editbox:   newEditbox(),
+		maxKibitz: 50, // XXX
 	}
 }
 

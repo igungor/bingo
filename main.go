@@ -2,6 +2,7 @@ package main
 
 // TODO(ig): show score for each letters in rack
 // TODO(ig): help screen (shortcuts etc.)
+// TODO(ig): highlight error causes on move validity
 
 import (
 	"log"
