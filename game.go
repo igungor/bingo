@@ -27,15 +27,23 @@ var dm quackle.DataManager
 var flexAbc quackle.FlexibleAlphabetParameters
 
 type game struct {
-	qg      quackle.Game
+	qg quackle.Game
+
+	// widgets
 	board   board
 	rack1   rack
 	rack2   rack
 	legend  legend
 	editbox editbox
 
+	// screen width, height
+	w, h int
+
+	// toggle switch legend
 	showLegend bool
-	showHelp   bool
+
+	// gameplay error
+	err error
 }
 
 func (g *game) draw() {
@@ -43,15 +51,14 @@ func (g *game) draw() {
 	g.board.qb = g.pos().Board()
 	g.rack1.player = g.player(0)
 	g.rack2.player = g.player(1)
+	g.w, g.h = termbox.Size()
 
 	termbox.Clear(fgcolor, bgcolor)
 	defer termbox.Flush()
 
-	sw, sh := termbox.Size()
-
 	// board
-	g.board.x = (sw - g.board.w*2 + 2 + 1) / 2
-	g.board.y = (sh - g.board.h - g.rack1.h - g.editbox.h - 2) / 2
+	g.board.x = (g.w - g.board.w*2 + 2 + 1) / 2
+	g.board.y = (g.h - g.board.h - g.rack1.h - g.editbox.h - 2) / 2
 	g.board.draw()
 
 	// racks
@@ -78,10 +85,6 @@ func (g *game) draw() {
 		g.legend.y = g.board.y + g.board.h
 		g.legend.draw()
 	}
-
-	if g.showHelp {
-	}
-
 }
 
 func (g *game) loop() {
@@ -172,18 +175,53 @@ func (g *game) doHumanMove() {
 
 	// score the move
 	pos := g.pos()
+
+	// known move.
 	if pos.Moves().Contains(move) {
 		pos.ScoreMove(move)
 		g.qg.SetCandidate(move)
-	} else {
-		if pos.ValidateMove(move) != 0 {
-			g.editbox.warn = true
-			return
-		}
-		pos.AddAndSetMoveMade(move)
+		g.qg.CommitMove(move)
+		g.editbox.clear()
+		return
 	}
-	g.qg.CommitMove(move)
-	g.editbox.clear()
+
+	// validate unknown move
+	validityFlags := pos.ValidateMove(move)
+	if validityFlags == int(quackle.GamePositionValidMove) {
+		pos.ScoreMove(move)
+		pos.AddAndSetMoveMade(move)
+		g.qg.CommitMove(move)
+		g.editbox.clear()
+		return
+	}
+
+	// could not validate the move. reasons?
+	//
+	// very first move doesn't cover the center star
+	if validityFlags&int(quackle.GamePositionInvalidOpeningPlace) > 0 {
+		g.editbox.warn = true
+		g.setErr("CENTER STAR")
+	}
+	// word doesn't connect to other plays on board
+	if validityFlags&int(quackle.GamePositionInvalidPlace) > 0 {
+		g.editbox.warn = true
+		g.setErr("COME CLOSE")
+	}
+	// there are missing tiles in the rack
+	if validityFlags&int(quackle.GamePositionInvalidTiles) > 0 {
+		g.editbox.warn = true
+		g.setErr("IMAGINARY")
+	}
+	// there is no such word mate
+	if validityFlags&int(quackle.GamePositionUnacceptableWord) > 0 {
+		g.editbox.warn = true
+		g.setErr("IS IT A WORD?")
+	}
+	// invalid action
+	if validityFlags&int(quackle.GamePositionInvalidAction) > 0 {
+		g.editbox.warn = true
+		g.setErr("SAD FACE")
+	}
 }
 
 func (g *game) showHint() {
@@ -217,6 +255,10 @@ func (g *game) curPlayer() quackle.Player {
 func (g *game) player(id int) quackle.Player {
 	found := make([]bool, 1)
 	return g.pos().Players().PlayerForId(id, found)
+}
+
+func (g *game) setErr(err string) {
+	g.err = fmt.Errorf(err)
 }
 
 // newGame initializes a new game and constructs game object.
