@@ -7,7 +7,7 @@ import (
 	"time"
 
 	"github.com/igungor/quackle"
-	termbox "github.com/igungor/termbox-go"
+	termbox "github.com/nsf/termbox-go"
 )
 
 const (
@@ -133,7 +133,7 @@ mainloop:
 		case termbox.EventResize:
 			g.draw()
 		case termbox.EventMouse:
-			if ev.Key == termbox.MouseLeft || ev.Key == termbox.MouseDown {
+			if ev.Key == termbox.MouseLeft {
 				g.draw()
 				g.board.highlightPos(ev.MouseX, ev.MouseY)
 				pos := g.board.pos(ev.MouseX, ev.MouseY)

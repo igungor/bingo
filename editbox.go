@@ -6,7 +6,7 @@ import (
 	"unicode"
 	"unicode/utf8"
 
-	termbox "github.com/igungor/termbox-go"
+	termbox "github.com/nsf/termbox-go"
 )
 
 const preferredHorizontalThreshold = 3
@@ -58,10 +58,12 @@ func (eb *editbox) draw() {
 
 	// error/warning indicator
 	if eb.warn {
-		termbox.SetCell(eb.x, eb.y, '❗', fgcolor|termbox.AttrBold, bgcolor)
+		drawRectWithAttr(eb.x, eb.y, eb.w, eb.h, fgcolor, bgcolor)
+		termbox.SetCell(eb.x, eb.y, '❗', fgcolor, bgcolor)
 		eb.warn = false
 	} else if eb.err {
-		termbox.SetCell(eb.x, eb.y, '⊗', fgcolor|termbox.AttrBold, bgcolor)
+		drawRectWithAttr(eb.x, eb.y, eb.w, eb.h, fgcolor, bgcolor)
+		termbox.SetCell(eb.x, eb.y, '⊗', fgcolor, bgcolor)
 		eb.err = false
 	}
 }
