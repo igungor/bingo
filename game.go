@@ -330,8 +330,17 @@ func newGame(opts *gameOpts) *game {
 
 	// set up players and game
 	g := quackle.NewGame()
-	player1 := quackle.NewPlayer(opts.p1name, 1, 0)
-	player2 := newCompPlayer("cpu", 1)
+	var player1, player2 quackle.Player
+	if opts.p1type == human {
+		player1 = quackle.NewPlayer(opts.p1name, int(opts.p1type), 0)
+	} else {
+		player1 = newCompPlayer(opts.p1name, 1)
+	}
+	if opts.p2type == human {
+		player2 = quackle.NewPlayer(opts.p2name, int(opts.p2type), 0)
+	} else {
+		player2 = newCompPlayer(opts.p2name, 1)
+	}
 	players := quackle.NewPlayerList()
 	players.Add(player1)
 	players.Add(player2)
@@ -358,8 +367,8 @@ func newGame(opts *gameOpts) *game {
 type playerType int
 
 const (
-	human playerType = iota
-	computer
+	computer playerType = iota
+	human
 )
 
 type gameOpts struct {
