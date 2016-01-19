@@ -49,8 +49,8 @@ type game struct {
 func (g *game) draw() {
 	// update board and racks
 	g.board.qb = g.pos().Board()
-	g.rack1.player = g.player(0)
-	g.rack2.player = g.player(1)
+	g.rack1.player = g.playerById(0)
+	g.rack2.player = g.playerById(1)
 	g.w, g.h = termbox.Size()
 
 	termbox.Clear(fgcolor, bgcolor)
@@ -68,10 +68,10 @@ func (g *game) draw() {
 	g.rack2.x = g.board.x + g.rack1.w + 2
 	g.rack2.y = g.board.y + g.board.h + 2
 	g.rack2.draw()
-	if g.curPlayer().Id() == 0 {
-		g.rack1.highlight()
+	if g.player().Id() == 0 {
+		g.rack1.setActive()
 	} else {
-		g.rack2.highlight()
+		g.rack2.setActive()
 	}
 
 	// editbox
@@ -94,9 +94,8 @@ mainloop:
 			g.over()
 			break mainloop
 		}
-
 		// go on cold heartless cpu.
-		if g.curPlayer().Xtype() == int(quackle.PlayerComputerPlayerType) {
+		if g.player().Xtype() == int(quackle.PlayerComputerPlayerType) {
 			time.Sleep(time.Millisecond * time.Duration(rand.Intn(1000)))
 			g.qg.HaveComputerPlay()
 			g.draw()
@@ -112,7 +111,7 @@ mainloop:
 				// new human move
 				g.doHumanMove()
 			case termbox.KeyCtrlS:
-				g.curPlayer().Rack().Shuffle()
+				g.player().Rack().Shuffle()
 			case termbox.KeyCtrlL:
 				g.showLegend = !g.showLegend
 			case termbox.KeyCtrlT:
@@ -236,26 +235,30 @@ func (g *game) showHint() {
 // over draws game-over screen.
 func (g *game) over() {
 	for i := 0; i < g.board.w/2+1; i++ {
+		g.draw()
 		drawRect(g.board.x+i, g.board.y+i, g.board.w*2-i*2, g.board.h-i*2)
 		termbox.Flush()
 		time.Sleep(100 * time.Millisecond)
 	}
-	tbprint("Game Over!", g.board.x+g.board.w/2+3, g.board.y+g.board.h/2, fgcolor|termbox.AttrBold, bgcolor)
+	msg := "Game Over!"
+	fill(g.board.x+g.board.w/2, g.board.y+g.board.h/2, len(msg)+6, 1, ' ')
+	tbprint(msg, g.board.x+g.board.w/2+3, g.board.y+g.board.h/2, fgcolor|termbox.AttrBold, bgcolor)
 	termbox.Flush()
-	time.Sleep(2 * time.Second)
+	time.Sleep(3 * time.Second)
 }
 
-// pos returns current game position
+// pos returns current game position.
 func (g *game) pos() quackle.GamePosition {
 	return g.qg.CurrentPosition().(quackle.GamePosition)
 }
 
-// player returns current player
-func (g *game) curPlayer() quackle.Player {
+// player returns current player.
+func (g *game) player() quackle.Player {
 	return g.pos().CurrentPlayer().(quackle.Player)
 }
 
-func (g *game) player(id int) quackle.Player {
+// playerById returns the player by the given id.
+func (g *game) playerById(id int) quackle.Player {
 	found := make([]bool, 1)
 	return g.pos().Players().PlayerForId(id, found)
 }

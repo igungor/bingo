@@ -36,6 +36,6 @@ func (r *rack) draw() {
 	}
 }
 
-func (r *rack) highlight() {
+func (r *rack) setActive() {
 	tbprint(r.player.Name(), r.x+1, r.y-1, termbox.ColorWhite, termbox.ColorMagenta)
 }
