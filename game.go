@@ -235,11 +235,14 @@ func (g *game) showHint() {
 
 // over draws game-over screen.
 func (g *game) over() {
-	termbox.Clear(fgcolor, bgcolor)
-	sw, sh := termbox.Size()
-	tbprint("GAME OVER", sw/2-4, sh/2, fgcolor, bgcolor)
+	for i := 0; i < g.board.w/2+1; i++ {
+		drawRect(g.board.x+i, g.board.y+i, g.board.w*2-i*2, g.board.h-i*2)
+		termbox.Flush()
+		time.Sleep(100 * time.Millisecond)
+	}
+	tbprint("Game Over!", g.board.x+g.board.w/2+3, g.board.y+g.board.h/2, fgcolor|termbox.AttrBold, bgcolor)
 	termbox.Flush()
-	time.Sleep(1 * time.Second)
+	time.Sleep(2 * time.Second)
 }
 
 // pos returns current game position
