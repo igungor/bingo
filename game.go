@@ -88,11 +88,10 @@ func (g *game) draw() {
 }
 
 func (g *game) loop() {
-mainloop:
 	for {
 		if g.pos().GameOver() {
 			g.over()
-			break mainloop
+			return
 		}
 		// go on cold heartless cpu.
 		if g.player().Xtype() == int(quackle.PlayerComputerPlayerType) {
@@ -123,7 +122,7 @@ mainloop:
 			case termbox.KeySpace:
 				g.editbox.insertRune(' ')
 			case termbox.KeyEsc, termbox.KeyCtrlC:
-				break mainloop
+				return
 			default:
 				if ev.Ch != 0 {
 					g.editbox.insertRune(ev.Ch)
