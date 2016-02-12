@@ -10,8 +10,8 @@ func tbprint(msg string, x, y int, fg, bg termbox.Attribute) {
 	}
 }
 
-// fill fills a rectanngle at position (x,y) with area of w*h.
-// the grid.
+// fill draws a rectangle at position (x,y) with area of w*h and fills the
+// inside with r.
 func fill(x, y, w, h int, r rune) {
 	for ly := 0; ly < h; ly++ {
 		for lx := 0; lx < w; lx++ {
@@ -20,14 +20,15 @@ func fill(x, y, w, h int, r rune) {
 	}
 }
 
-// drawRect draws a rectangle with unicode borders at position (x,y) with area of
-// w*h.
+// drawRect draws a rectangle with unicode borders at position (x,y) with area
+// of w*h.
 func drawRect(x, y, w, h int) {
 	drawRectWithAttr(x, y, w, h, fgcolor, bgcolor)
 }
 
-// drawRect draws a rectangle with unicode borders at position (x,y) with area of
-// w*h.
+// drawRectWithAttr draws a rectangle with unicode borders at position (x,y) with area of
+// w*h with the given foreground and background attributes. Attributes can be
+// colors and/or styling.
 func drawRectWithAttr(x, y, w, h int, fgattr, bgattr termbox.Attribute) {
 	// top border
 	termbox.SetCell(x-1, y-1, '┌', fgattr, bgattr)
