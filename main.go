@@ -24,15 +24,10 @@ func init() {
 }
 
 func main() {
-	if err := realMain(); err != nil {
-		log.Fatal(err)
-	}
-}
-
-func realMain() error {
+	flag.Usage = usage
 	flag.Parse()
 	if err := termbox.Init(); err != nil {
-		return err
+		log.Fatal(err)
 	}
 	defer termbox.Close()
 	termbox.SetInputMode(termbox.InputEsc | termbox.InputMouse)
@@ -55,5 +50,23 @@ func realMain() error {
 	game := newGame(opts)
 	game.draw()
 	game.loop()
-	return nil
+}
+
+func usage() {
+	fmt.Fprintf(os.Stderr, "bingo is a crossword game.")
+	flag.PrintDefaults()
+	fmt.Fprintln(os.Stderr)
+	fmt.Fprintf(os.Stderr, "Rules:")
+	fmt.Fprintf(os.Stderr, "  * input box accepts quackle-format")
+	fmt.Fprintf(os.Stderr, "    - `H2 NABER` means start from `H2` and place the word `NABER` from top to bottom.")
+	fmt.Fprintf(os.Stderr, "    - `3B HELO` means start from `3B` and place the word `HELO` from left to right.")
+	fmt.Fprintf(os.Stderr, "    - words must be typed in all uppercase, except jokers.")
+	fmt.Fprintf(os.Stderr, "    - jokers must be typed in lowercase. `n` is the joker letter for move `4F CAMEKAn`.")
+	fmt.Fprintf(os.Stderr, "    - type `-` to pass your turn.")
+	fmt.Fprintf(os.Stderr, "    - use `.` if a letter of the word you type is already on the board.")
+	fmt.Fprintf(os.Stderr, "  * `ctrl-t` toggles multipliers and scores.")
+	fmt.Fprintf(os.Stderr, "  * `ctrl-f` fill the input box with a highscore move for you.")
+	fmt.Fprintf(os.Stderr, "  * `ctrl-s` shuffles your rack.")
+	fmt.Fprintf(os.Stderr, "  * `ctrl-l` toggles legend.")
+	fmt.Fprintf(os.Stderr, "  * `ctrl-c` or `esc` quit the game.")
 }

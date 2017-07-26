@@ -28,11 +28,6 @@ human vs. cpu. cpu always wins!
 - `ctrl-l` toggles legend.
 - `ctrl-c` or `esc` quit the game.
 
-## there are bugs
-
-not just bugs, there are many shortcomings as well. it was just a proof-of-concept thingy but it's
-a playable game right now. i play and lose every damn game.
-
 ## credits
 
 [@gokceneraslan](https://github.com/gokceneraslan)
