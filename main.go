@@ -6,8 +6,10 @@ package main
 
 import (
 	"flag"
+	"fmt"
 	"log"
 	"math/rand"
+	"os"
 	"time"
 
 	termbox "github.com/nsf/termbox-go"
