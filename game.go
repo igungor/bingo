@@ -270,8 +270,8 @@ func (g *game) setErr(err string) {
 func newGame(opts *gameOpts) *game {
 	if opts == nil {
 		opts = &gameOpts{
-			p1type:   human,
-			p2type:   computer,
+			p1type:   quackle.PlayerHumanPlayerType,
+			p2type:   quackle.PlayerComputerPlayerType,
 			p1name:   "iby",
 			p2name:   "hal",
 			alphabet: alphabet,
@@ -330,12 +330,12 @@ func newGame(opts *gameOpts) *game {
 	// set up players and game
 	g := quackle.NewGame()
 	var player1, player2 quackle.Player
-	if opts.p1type == human {
+	if opts.p1type == quackle.PlayerHumanPlayerType {
 		player1 = quackle.NewPlayer(opts.p1name, int(opts.p1type), 0)
 	} else {
 		player1 = newCompPlayer(opts.p1name, 1)
 	}
-	if opts.p2type == human {
+	if opts.p2type == quackle.PlayerHumanPlayerType {
 		player2 = quackle.NewPlayer(opts.p2name, int(opts.p2type), 0)
 	} else {
 		player2 = newCompPlayer(opts.p2name, 1)
@@ -363,15 +363,8 @@ func newGame(opts *gameOpts) *game {
 	}
 }
 
-type playerType int
-
-const (
-	computer playerType = iota
-	human
-)
-
 type gameOpts struct {
-	p1type, p2type playerType
+	p1type, p2type quackle.QuacklePlayerPlayerType
 	p1name, p2name string
 	alphabet       string
 }
